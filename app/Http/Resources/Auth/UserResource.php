@@ -1,26 +1,23 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TodoResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'date' => $this->date,
-            'priority' => $this->priority,
-            'status' => $this->status,
+            'name' => $this->name,
+            'email' => $this->email,
             'created_at' => $this->created_at
         ];
     }

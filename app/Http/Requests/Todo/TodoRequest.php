@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Todo;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -30,8 +31,18 @@ class TodoRequest extends FormRequest
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'date' => ['required', 'date'],
-            'priority' => ['required', new Enum(TaskPriority::class)],
+            'priority' => ['nullable', new Enum(TaskPriority::class)],
             'status' => ['required', new Enum(TaskStatus::class)],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'date' => empty($this->date) ? null : Carbon::parse($this->get('date'))
+        ]);
     }
 }
