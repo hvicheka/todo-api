@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Todo\TodoFilterRequest;
 use App\Http\Requests\Todo\TodoRequest;
 use App\Models\Todo;
 use App\Http\Resources\Todo\TodoResource;
@@ -10,12 +11,20 @@ class TodoController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 
+     * @param  \App\Http\Requests\Todo\TodoFilterRequest $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TodoFilterRequest $request)
     {
         $todos = Todo::query()
+            ->when($request->status, function ($query) use($request) {
+                return $query->where('status', $request->status);
+            })
+            ->when($request->q, function($query) use($request){
+                return $query->search($request->q);
+            })
             ->latest('id')
             ->paginate();
         $response = TodoResource::collection($todos);
